@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专属工业AI协作平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+
+        body {
+            background: #121212;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 顶部标题 */
+        .header {
+            background: #1a1a1a;
+            padding: 16px 20px;
+            border-bottom: 1px solid #333;
+            text-align: center;
+        }
+
+        .header h1 {
+            color: #0091ff;
+            font-size: 20px;
+        }
+
+        /* 聊天区域 */
+        .chat-container {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        /* 消息气泡 */
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .user-message {
+            background: #0066cc;
+            align-self: flex-end;
+        }
+
+        .ai-message {
+            background: #2a2a2a;
+            align-self: flex-start;
+            border: 1px solid #444;
+        }
+
+        /* 代码 / 图纸区域 */
+        .code-block {
+            background: #111;
+            padding: 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: #00ff99;
+            border-left: 3px solid #0091ff;
+        }
+
+        /* 底部输入框 */
+        .input-area {
+            background: #1a1a1a;
+            padding: 15px;
+            border-top: 1px solid #333;
+            display: flex;
+            gap: 10px;
+        }
+
+        #userInput {
+            flex: 1;
+            padding: 14px 16px;
+            background: #222;
+            color: #fff;
+            border: 1px solid #555;
+            border-radius: 8px;
+            font-size: 15px;
+            outline: none;
+        }
+
+        #sendBtn {
+            padding: 14px 24px;
+            background: #0091ff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        #sendBtn:hover {
+            background: #0077cc;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+        <h1>⚡ 专属工业AI协作平台</h1>
+        <p style="color:#aaa; font-size:13px; margin-top:5px">实时对话 · 生成代码 · 绘制CAD · 现场协作</p>
+    </div>
+
+    <div class="chat-container" id="chatBox">
+        <div class="message ai-message">
+            平台已启动！我已全权接管～
+            <br>你可以直接发送：
+            <br>• 生成PLC程序
+            <br>• 生成CAD电气图纸
+            <br>• 现场故障/数据/现象
+        </div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="userInput" placeholder="输入你的需求，例如：生成等离子设备PLC程序和CAD图纸">
+        <button id="sendBtn" onclick="sendMessage()">发送</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            let input = document.getElementById("userInput");
+            let text = input.value.trim();
+            if (!text) return;
+
+            // 显示用户消息
+            addMessage(text, "user");
+            input.value = "";
+
+            // AI自动回复
+            setTimeout(() => {
+                aiResponse(text);
+            }, 800);
+        }
+
+        function addMessage(content, type) {
+            let div = document.createElement("div");
+            div.className = "message " + (type === "user" ? "user-message" : "ai-message");
+            div.innerHTML = content;
+            document.getElementById("chatBox").appendChild(div);
+            div.scrollIntoView();
+        }
+
+        // AI 自动生成内容
+        function aiResponse(msg) {
+            let res = "";
+
+            if (msg.includes("PLC") || msg.includes("程序")) {
+                res = `已生成 PLC 程序（西门子200 SMART）：
+<div class="code-block">
+// 自动生成程序
+LD     I0.0
+O      Q0.0
+AN     I0.1
+AN     I0.7
+=      Q0.0
+</div>`;
+            } 
+            else if (msg.includes("CAD") || msg.includes("图纸")) {
+                res = `已生成 CAD 电气原理图：
+<div class="code-block">
+【I/O 分配表】
+I0.0 = 启动    I0.1 = 停止
+I0.2 = 安全门  I0.7 = 急停
+
+Q0.0 = 运行    Q0.1 = 电磁阀
+Q0.2 = 报警    Q0.3 = 指示灯
+
+电源：AC220V → DC24V
+</div>`;
+            } 
+            else {
+                res = `收到！我已记录你的现场信息：<br><b>${msg}</b><br>请稍等，我马上为你生成方案！`;
+            }
+
+            addMessage(res, "ai");
+        }
+
+        // 回车发送
+        document.getElementById("userInput").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") sendMessage();
+        });
+    </script>
+</body>
+</html>
